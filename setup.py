@@ -19,7 +19,6 @@ setup(
         'statsmodels',
         'tqdm',
         'unidecode',
-        'xarray',
     ],
     author='Jesús Casado Rodríguez',
     author_email='jesus.casado-rodriguez@ec.europa.eu',
