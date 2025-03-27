@@ -176,3 +176,45 @@ def get_stations(
             logging.warning('The extent filter could not be applied because the format is not correct: [xmin, ymin, xmax, ymax]')
         
     return stations
+
+
+def find_duplicates(
+    gdf: gpd.GeoDataFrame,
+    provider_col: str = 'PROV_ID',
+    distance_thr: float = .01667, 
+):
+    """Finds duplicates in the input GeoDataFrame based on distance (points closer than the threshold) and provider (if they have different provider)
+    
+    Parameters:
+    -----------
+    gdf: geopandas.GeoDataFrame
+        table of reservoirs/stations in the database. For instance, the result from `get_stations()`
+    provider_col: str
+        column in "gdf" that defines the provider. Duplicates must have a different provider
+    distance_thr: float
+        distance below which duplicates can exist. Points further apart than this distance will not be spotted as duplicates. The values depend on the reference coordinate system in "gdf". By default, is uses a value in degrees, as the output from `get_stations()` is in a geographical reference system (epsg:4326)
+        
+    Returns:
+    --------
+    A list of lists with groups of duplicates. The values are the index in "gdf"
+    """
+    
+    duplicates = []
+    for ID, point in gdf.geometry.items():
+        if any(ID in sublist for sublist in duplicates):
+            continue
+        
+        prov_id = gdf.loc[ID, provider_col]
+
+        # distance to the other reservoirs
+        others = gdf[gdf.index != ID]
+        distance = others.geometry.distance(point)
+
+        # find close reservoirs
+        if distance.min() < distance_thr:
+            ids = distance[distance < distance_thr].index.tolist()
+            ids = [id for id in ids if gdf.loc[id, provider_col] != prov_id]
+            if len(ids) > 0:
+                duplicates.append([ID] + ids)
+                
+    return duplicates
