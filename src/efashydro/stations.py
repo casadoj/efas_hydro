@@ -192,7 +192,7 @@ def find_duplicates(
     provider_col: str
         column in "gdf" that defines the provider. Duplicates must have a different provider
     distance_thr: float
-        distance below which duplicates can exist. Points further apart than this distance will not be spotted as duplicates. The values depend on the reference coordinate system in "gdf". By default, is uses a value in degrees, as the output from `get_stations()` is in a geographical reference system (epsg:4326)
+        distance below which duplicates can exist. Points further apart than this distance will not be spotted as duplicates. The values depend on the reference coordinate system in "gdf". By default, it uses a value in degrees, as the output from `get_stations()` is in a geographical reference system (epsg:4326)
         
     Returns:
     --------
