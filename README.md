@@ -1,6 +1,6 @@
 # EFAS-Hydro
 
-Tools to extract data from the Hydrological Data Colection Centre of the European Flood Awareness System.
+This `Python` library contains tools to extract data from the [Hydrological Data Management Service](https://ehdcc.soologic.com/hdms/#!/login) of the European Flood Awareness System.
 
 ## Installation
 
@@ -53,6 +53,28 @@ It returns a list of lists with groups of duplicated stations. The values in the
 
 #### `get_timeseries()`
 
-This function extracts time series from the hydrological data base for a single station an service, but multiple variables. Refer to the [database documentation](https://confluence.smhi.tds.tieto.com/pages/viewpage.action?spaceKey=EHDCC&title=D2-07.2.+API) for further reference about services and variables. The function allows to limit the period extracted using the `start` and `end` attributes.
+This function extracts time series from the hydrological data base for a single station an service, multiple variables, and a time period. It returns a `pandas.DataFrame` with time steps as rows and variables as columns.
 
-It returns a `pandas.DataFrame` with time steps as rows and variables as columns.
+The tables below specify the available services and variables, but refer to the [database documentation](https://confluence.smhi.tds.tieto.com/pages/viewpage.action?spaceKey=EHDCC&title=D2-07.2.+API) for further and possibly more updated information. 
+
+***Table 1**. Services available for download.*
+
+| Service | Description |
+| ------- | ----------- |
+| noperational1h   | 1 hour near-real-time operational data       |
+| noperational6h   | 6 hour near-real-time operational data       |
+| noperational24h  | 24 hour near-real-time operational data      |
+| nhoperational1h  | 1 hour historic operational data  |
+| nhoperational6h  | 6 hour historic operational data  |
+| nhoperational24h | 24 hour historic operational data |
+
+***Table 2**. Variables available for download.*
+
+| Variable | Description     | Units |
+| -------- | -----------     | ----- |
+| W        | River stage     | m     |
+| D        | River discharge | m3/s  |
+| I        | Reservoir inflow | m3/s | 
+| O        | Reservoir outflow | m3/s |
+| V        | Reservoir storage | hm3 |
+| R        | Reservoir level | m |
