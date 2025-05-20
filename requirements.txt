@@ -6,4 +6,3 @@ numpy
 pandas
 shapely
 tqdm
-unicodedata
