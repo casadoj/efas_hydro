@@ -1,11 +1,17 @@
 import os
 os.environ['USE_PYGEOS'] = '0'
+import numpy as np
 import pandas as pd
 import geopandas as gpd
 from shapely.geometry import box
 import requests
+import unicodedata
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 from typing import Optional, Union, List, Tuple, Literal
 import logging
+from pathlib import Path
 
 
 def remove_accents(text):
@@ -178,6 +184,80 @@ def get_stations(
     return stations
 
 
+def plot_stations(
+    geometry,
+    area: Optional[pd.Series] = None,
+    save: Union[str, Path] = None,
+    **kwargs
+):
+    """Creates a maps where reservoirs are represented as dots. The size of the dots reflects the catchment area (if provided)
+    
+    Parameters:
+    -----------
+    geometry: gpd.GeoSeries
+        Geometry of the points
+    area: pandas.Series (optional)
+        Reservoir catchment area (km2)
+    save: str or pathlib.Path (optional)
+        If provided, file where the plot will be saved
+    """
+    
+    figsize = kwargs.get('figsize', (20, 5))
+    title = kwargs.get('title', None)
+    alpha = kwargs.get('alpha', .7)
+    size = kwargs.get('size', 12)
+    color = kwargs.get('color', 'steelblue')
+    
+    # set up plot
+    proj = ccrs.PlateCarree()
+    fig, ax = plt.subplots(
+        figsize=figsize, 
+        subplot_kw={'projection': proj}
+    )
+    ax.add_feature(
+        cfeature.NaturalEarthFeature('physical', 'land', '10m', edgecolor='face', facecolor='wheat'),#'lightgray'),
+        alpha=.5,
+        zorder=0
+    )
+    ax.add_feature(
+        cfeature.NaturalEarthFeature('physical', 'rivers_lake_centerlines', '10m', edgecolor='lightslategrey', facecolor='none'),
+        alpha=0.7,
+        zorder=1
+    )
+    if 'extent' in kwargs:
+        ax.set_extent(kwargs['extent'], crs=proj)
+    if title is not None:
+        ax.text(.5, 1.125, title, horizontalalignment='center', verticalalignment='bottom', transform=ax.transAxes, fontsize=12)
+    ax.axis('off')
+    
+    # plot reservoir poitns
+    s = np.sqrt(area) if area is not None else size
+    scatter = ax.scatter(
+        geometry.x,
+        geometry.y,
+        s=s,
+        c=color,
+        alpha=alpha,
+        zorder=2
+    )  
+    
+    # legend
+    # if area is not None:
+    #     legend = ax.legend(
+    #         *scatter.legend_elements(prop='sizes', num=4, alpha=alpha),
+    #         title='catchment (km²)',
+    #         # bbox_to_anchor=(1.2, 0.5),
+    #         bbox_to_anchor=[1.025, .6, .06, .25],
+    #         loc='center left',
+    #         frameon=False
+    #         )
+    #     ax.add_artist(legend)    
+
+    # save
+    if save is not None:
+        plt.savefig(save, dpi=300, bbox_inches='tight')
+
+        
 def find_duplicates(
     gdf: gpd.GeoDataFrame,
     provider_col: str = 'PROV_ID',

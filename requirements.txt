@@ -1,3 +1,4 @@
+cartopy
 datetime
 geopandas
 matplotlib
@@ -5,3 +6,4 @@ numpy
 pandas
 shapely
 tqdm
+unicodedata
