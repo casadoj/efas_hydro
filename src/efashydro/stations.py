@@ -2,10 +2,8 @@ import os
 os.environ['USE_PYGEOS'] = '0'
 import pandas as pd
 import geopandas as gpd
-from shapely.geometry import Point, box
-import re
+from shapely.geometry import box
 import requests
-import unicodedata
 from typing import Optional, Union, List, Tuple, Literal
 import logging
 
@@ -68,10 +66,12 @@ def get_stations(
     
     # remove empty or unnecessary columns
     stations.dropna(axis=1, how='all', inplace=True)
-    stations.drop(['LATITUDE_GEODESIC', 'LONGITUDE_GEODESIC', 'GEODESIC_REFERENCE_SYSTEM', 'VARIABLES', 'CATCHMENT_AREA_UNITS', 'HEIGHT_UNITS'],
-                    axis=1,
-                    inplace=True,
-                    errors='ignore')
+    stations.drop(
+        ['LATITUDE_GEODESIC', 'LONGITUDE_GEODESIC', 'GEODESIC_REFERENCE_SYSTEM', 'VARIABLES', 'CATCHMENT_AREA_UNITS', 'HEIGHT_UNITS'],
+        axis=1,
+        inplace=True,
+        errors='ignore'
+    )
     
     # simplify column names
     rename_cols = {
@@ -164,7 +164,7 @@ def get_stations(
     stations = stations[stations.LON.notnull() & stations.LAT.notnull()]
     stations = gpd.GeoDataFrame(
         stations,
-        geometry=[Point(xy) for xy in zip(stations.LON, stations.LAT)],
+        geometry=gpd.points_from_xy(stations['LON'], stations['LAT']),
         crs='epsg:4326'
     )
     

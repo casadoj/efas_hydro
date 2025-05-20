@@ -55,8 +55,8 @@ def get_timeseries(
         'D': 'discharge',
         'I': 'inflow',
         'O': 'outflow',
-        'V': 'volume',
-        'R': 'level',
+        'V': 'storage',
+        'R': 'elevation',
     }
     SERVICES = {
         'noperational1h': '1 hour near-real-time operational data', 
