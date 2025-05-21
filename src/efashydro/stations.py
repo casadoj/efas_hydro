@@ -220,7 +220,7 @@ def plot_stations(
         zorder=0
     )
     ax.add_feature(
-        cfeature.NaturalEarthFeature('physical', 'rivers_lake_centerlines', '10m', edgecolor='lightslategrey', facecolor='none'),
+        cfeature.NaturalEarthFeature('physical', 'rivers_lake_centerlines', '10m', edgecolor='lightslategrey', facecolor='none', linewidth=.5),
         alpha=0.7,
         zorder=1
     )
@@ -231,7 +231,7 @@ def plot_stations(
     ax.axis('off')
     
     # plot reservoir poitns
-    s = np.sqrt(area) if area is not None else size
+    s = np.cbrt(area) if area is not None else size
     scatter = ax.scatter(
         geometry.x,
         geometry.y,
