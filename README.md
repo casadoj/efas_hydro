@@ -38,7 +38,7 @@ This function retrieves station metadata from the API and returns it as a GeoDat
 * The `country_id` allows you to extract the stations in one or more countries. You need to use the country ISO 3166-1 alfa-2 code, e.g., 'PT' for Portual, 'IT' for Italy...
 * You can also filter by provider(s) using the `provider_id` attribute.
 * If you already know the EFAS_ID of the stations, you can use the `station_id` attribute.
-* You can also filter statios with a bounding box using the `extent` argument. You need to provide a list of 4 values: minimum longitud, minimum latitud, maximum longitude and maximum latitude.
+* You can also filter stations with a bounding box using the `extent` argument. You need to provide a list of 4 values: minimum longitud, minimum latitud, maximum longitude and maximum latitude.
 
 The function returns a point `geopandas.GeoDataFrame` with the stations that passed the filters and their metadata.
 
