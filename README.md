@@ -1,3 +1,5 @@
+<img src="./images/copernicus_logo.png" alt="Logo Copernicus" width="280" align="center"><img src="./images/copernicus_emergency_management.png" alt="Logo CEMS" width="200" align="center">
+
 # EFAS-Hydro
 
 This `Python` library contains tools to extract data from the [Hydrological Data Management Service](https://ehdcc.soologic.com/hdms/#!/login) of the European Flood Awareness System.
