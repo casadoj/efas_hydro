@@ -39,7 +39,7 @@ This function retrieves station metadata from the API and returns it as a GeoDat
 * You can also filter by provider(s) using the `provider_id` attribute.
 * If you already know the EFAS_ID of the stations, you can use the `station_id` attribute.
 * Stations can be also filtered by the English name of the basin(s) of interest using the `basin_name` attribute.
-* You can also filter statios with a bounding box using the `extent` argument. You need to provide a list of 4 values: minimum longitud, minimum latitud, maximum longitude and maximum latitude.
+* You can also filter stations with a bounding box using the `extent` argument. You need to provide a list of 4 values: minimum longitud, minimum latitud, maximum longitude and maximum latitude.
 
 The function returns a point `geopandas.GeoDataFrame` with the stations that passed the filters and their metadata.
 
