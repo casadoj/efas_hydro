@@ -27,6 +27,7 @@ def get_stations(
     country_id: Optional[Union[str, List[str]]] = None,
     provider_id: Optional[Union[int, List[int]]] = None, 
     station_id: Optional[Union[int, List[int]]] = None,
+    basin_name: Optional[Union[str, List[str]]] = None,
     extent: Optional[List[float]] = None,
 ) -> gpd.GeoDataFrame:
     """
@@ -44,6 +45,8 @@ def get_stations(
         ID of the data provider
     station_id: integer or list of integers (optional)
         ID of the station
+    basin_name: string or list of strings (optional)
+        English name of the basin(s) of interest
     extent: list (optional)
         Bounding box of the stations to be extracted. It must contain 4 values: [xmin, ymin, xmax, ymax]
         
@@ -161,6 +164,13 @@ def get_stations(
         if isinstance(station_id, int):
             station_id = [station_id]
         stations = stations.loc[station_id]
+
+    if basin_name:
+        if isinstance(basin_name, str):
+            basin_name = [basin_name.lower()]
+        elif isinstance(basin_name, list):
+            basin_name = [name.lower() for name in basin_name]
+        stations = stations.loc[stations.BASIN_EN.str.lower().isin(basin_name)]
                 
     # convert to geopandas
     if stations.LON.isnull().any():
