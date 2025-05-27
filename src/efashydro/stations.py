@@ -118,7 +118,6 @@ def get_stations(
     # fix country names
     stations.COUNTRY_ID = stations.COUNTRY_ID.str.upper().replace('SP', 'ES')
     stations.COUNTRY = stations.COUNTRY.str.capitalize()
-    
     country_map = {
         'CY': 'Cyprus',
         'MK': 'North Macedonia',
@@ -138,6 +137,31 @@ def get_stations(
     stations[text_columns] = stations[text_columns].fillna('').astype(str)
     for col in text_columns:
         stations[col] = stations[col].str.capitalize().apply(remove_accents)
+    basin_map ={
+        'Tajo': 'Tagus',
+        'Tejo': 'Tagus',
+        'Tejo, above henares': 'Tagus',
+        'Duero': 'Douro',
+        'Duoro, below tormes': 'Douro',
+        'Mino': 'Minho',
+        'Miio': 'Minho'
+    }
+
+    # correct basin's English names
+    basin_map ={
+        'tajo': 'tagus',
+        'tejo': 'tagus',
+        'tejo, above henares': 'tagus',
+        'duero': 'douro',
+        'duoro, below tormes': 'douro',
+        'mino': 'minho',
+        'miio': 'minho',
+        'dabune': 'danube',
+        'dunav': 'danube'
+    }
+    for wrong_name, right_name in basin_map.items():
+        mask = stations.BASIN_EN.str.lower() == wrong_name.lower()
+        stations.loc[mask, 'BASIN_EN'] = right_name.capitalize()
     
     # apply filters
     
@@ -167,10 +191,10 @@ def get_stations(
 
     if basin_name:
         if isinstance(basin_name, str):
-            basin_name = [basin_name.lower()]
+            basin_name = tuple([basin_name.lower()])
         elif isinstance(basin_name, list):
-            basin_name = [name.lower() for name in basin_name]
-        stations = stations.loc[stations.BASIN_EN.str.lower().isin(basin_name)]
+            basin_name = tuple([name.lower() for name in basin_name])
+        stations = stations.loc[stations.BASIN_EN.str.lower().startswith(basin_name)]
                 
     # convert to geopandas
     if stations.LON.isnull().any():
