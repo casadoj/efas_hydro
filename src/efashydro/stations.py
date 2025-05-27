@@ -194,7 +194,7 @@ def get_stations(
             basin_name = tuple([basin_name.lower()])
         elif isinstance(basin_name, list):
             basin_name = tuple([name.lower() for name in basin_name])
-        stations = stations.loc[stations.BASIN_EN.str.lower().startswith(basin_name)]
+        stations = stations.loc[stations.BASIN_EN.str.lower().str.startswith(basin_name)]
                 
     # convert to geopandas
     if stations.LON.isnull().any():
