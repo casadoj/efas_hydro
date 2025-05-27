@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from tqdm.auto import tqdm
 from typing import Union, Optional, List
 import logging
+from pathlib import Path
+import matplotlib.pyplot as plt
 
 
 def get_timeseries(
@@ -133,3 +135,78 @@ def get_timeseries(
     
     logging.info(f'No data was found for station with EFAS_ID {station_id}')
     return None
+
+
+def plot_timeseries(
+    df: pd.DataFrame,
+    station_id: List[int],
+    save: Optional[Union[Path, str]] = None,
+    **kwargs
+):
+    """Plots time series data for specified stations.
+
+    This function takes a Pandas DataFrame containing time series data, selects
+    the specified station IDs, and generates a line plot for each. It offers
+    customization options for the plot's appearance and the ability to save
+    the generated figure.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The input DataFrame. It is expected to have a DatetimeIndex
+        and columns representing different station IDs.
+    station_id : list of strings
+        A list of station identifiers (column names) to be plotted.
+        All provided IDs must exist as columns in the DataFrame.
+    save : pathlib.Path or string (optional)
+        If provided, the path where the generated plot will be saved.
+        The file format is inferred from the extension (e.g., '.png', '.pdf').
+        If None, the plot is displayed but not saved.
+    **kwargs
+        Additional keyword arguments for plot customization:
+        * `figsize` (tuple, default=(16, 4)): Figure size (width, height) in inches.
+        * `linewidth` (float, default=0.8): Line width for the plotted series.
+        * `xlim` (tuple, default=(df.first_valid_index(), df.last_valid_index())):
+            X-axis limits (start_date, end_date). These should be datetime objects
+            or convertible to datetime objects (e.g., 'YYYY-MM-DD' strings).
+        * `ylim` (tuple, default=(-10, None)): Y-axis limits (min_value, max_value).
+            Set `None` for automatic scaling.
+        * `ylabel` (str, default=None): Label for the y-axis.
+    """
+
+    # make sure all IDs are in the time series
+    if (~pd.Series(station_id).isin(df.columns)).any():
+        raise ValueError('Not all the stations ID are in the time series')
+    else:
+        df = df[station_id].copy()
+
+    # extract keyword aguments
+    figsize = kwargs.get('figsize', (16, 4))
+    lw = kwargs.get('linewidth', .8)
+    xlim = kwargs.get('xlim', (df.first_valid_index(), df.last_valid_index()))
+    xlim = tuple([pd.to_datetime(x) for x in xlim])
+    ylim = kwargs.get('ylim', (-10, None))
+    ylabel = kwargs.get('ylabel', None)
+
+    # plot time series
+    fig, ax = plt.subplots(figsize=figsize)
+    for efas_id in station_id:
+        ax.plot(
+            df.loc[xlim[0]:xlim[-1], efas_id], 
+            label=efas_id,
+            lw=lw
+        )
+
+    # configuration
+    ax.set(
+        xlim=xlim,
+        ylim=ylim,
+        ylabel=ylabel
+    )
+    ax.spines[['top', 'right']].set_visible(False)
+    ax.legend(ncol=1, loc=0, frameon=False)
+
+    # save plot
+    if save is not None:
+        plt.savefig(save, dpi=300, bbox_inches='tight')
+        plt.close(fig)
