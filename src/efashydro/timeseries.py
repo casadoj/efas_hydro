@@ -139,7 +139,7 @@ def get_timeseries(
 
 def plot_timeseries(
     df: pd.DataFrame,
-    station_id: List[int],
+    station_id: Optional[List[int]] = None,
     save: Optional[Union[Path, str]] = None,
     **kwargs
 ):
@@ -155,7 +155,7 @@ def plot_timeseries(
     df : pandas.DataFrame
         The input DataFrame. It is expected to have a DatetimeIndex
         and columns representing different station IDs.
-    station_id : list of strings
+    station_id : list of strings (optional)
         A list of station identifiers (column names) to be plotted.
         All provided IDs must exist as columns in the DataFrame.
     save : pathlib.Path or string (optional)
@@ -175,10 +175,11 @@ def plot_timeseries(
     """
 
     # make sure all IDs are in the time series
-    if (~pd.Series(station_id).isin(df.columns)).any():
-        raise ValueError('Not all the stations ID are in the time series')
-    else:
-        df = df[station_id].copy()
+    if station_id is not None:
+        if (~pd.Series(station_id).isin(df.columns)).any():
+            raise ValueError('Not all the stations ID are in the time series')
+        else:
+            df = df[station_id].copy()
 
     # extract keyword aguments
     figsize = kwargs.get('figsize', (16, 4))
@@ -190,7 +191,7 @@ def plot_timeseries(
 
     # plot time series
     fig, ax = plt.subplots(figsize=figsize)
-    for efas_id in station_id:
+    for efas_id in df.columns:
         ax.plot(
             df.loc[xlim[0]:xlim[-1], efas_id], 
             label=efas_id,
