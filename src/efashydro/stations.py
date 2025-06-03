@@ -167,7 +167,9 @@ def get_stations(
     
     if kind:
         if stations.TYPE.isnull().any():
-            logging.warning(f' {stations.TYPE.isnull().sum()} stations are missing the type')
+            logging.warning(f'{stations.TYPE.isnull().sum()} stations are missing the type')
+        if kind.lower() not in ['river', 'reservoir']:
+            raise ValueError('"kind" must be either "river" or "reservoir"')
         stations = stations[stations.TYPE.eq(kind.upper())]
     
     if country_id:
