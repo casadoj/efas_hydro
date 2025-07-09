@@ -101,7 +101,7 @@ def get_timeseries(
         serie_list = []
         for i, (st, en) in enumerate(zip(batch_dates[:-1], batch_dates[1:])):
             if i > 0:
-                st += timedelta(hours=time_resolution)     
+                st += timedelta(hours=int(time_resolution / 2))     
                 
             # request data
             url = f'{API_URL}/{service}/{st.strftime(strftime)}/{en.strftime(strftime)}/{station_id}/{var}'
@@ -125,6 +125,7 @@ def get_timeseries(
     # combine all data
     if data_list:  
         data = pd.concat(data_list, axis=1)
+        data = data.reset_index().drop_duplicates().set_index('Timestamp')
         
         # ensure a complete index with the expected resolution
         idx = pd.date_range(data.first_valid_index(), data.last_valid_index(), freq=f'{time_resolution}h')
