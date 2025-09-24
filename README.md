@@ -35,7 +35,7 @@ To be able to use these functions you need credentials to access the Hydrologica
 This function retrieves station metadata from the API and returns it as a GeoDataFrame. By default it extracts all the stations in the database, but several attibutes allow to filter the results:
 
 * `kind` allows you to extract only gauging stations (`river`) or only reservoirs (`reservoir`).
-* The `country_id` allows you to extract the stations in one or more countries. You need to use the country ISO 3166-1 alfa-2 code, e.g., 'PT' for Portual, 'IT' for Italy...
+* The `country_id` allows you to extract the stations in one or more countries. You need to use the country ISO 3166-1 alfa-2 code, e.g., 'PT' for Portugal, 'IT' for Italy...
 * You can also filter by provider(s) using the `provider_id` attribute.
 * If you already know the EFAS_ID of the stations, you can use the `station_id` attribute.
 * Stations can be also filtered by the English name of the basin(s) of interest using the `basin_name` attribute.
