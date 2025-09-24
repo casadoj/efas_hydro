@@ -41,7 +41,7 @@ This function retrieves station metadata from the API and returns it as a GeoDat
 * Stations can be also filtered by the English name of the basin(s) of interest using the `basin_name` attribute.
 * You can also filter stations with a bounding box using the `extent` argument. You need to provide a list of 4 values: minimum longitud, minimum latitud, maximum longitude and maximum latitude.
 
-The function returns a point `geopandas.GeoDataFrame` with the stations that passed the filters and their metadata.
+The function returns a point `geopandas.GeoDataFrame` with the stations that passed the filters, and their metadata.
 
 #### `find_duplicates()`
 
@@ -56,7 +56,7 @@ It returns a list of lists with groups of duplicated stations. The values in the
 
 #### `get_timeseries()`
 
-This function extracts time series from the hydrological data base for a single station an service, multiple variables, and a time period. It returns a `pandas.DataFrame` with time steps as rows and variables as columns.
+This function extracts time series from the hydrological data base for a single station and service, multiple variables, and a time period. It returns a `pandas.DataFrame` with time steps as rows and variables as columns.
 
 The tables below specify the available services and variables, but refer to the [database documentation](https://confluence.smhi.tds.tieto.com/pages/viewpage.action?spaceKey=EHDCC&title=D2-07.2.+API) for further and possibly more updated information. 
 
