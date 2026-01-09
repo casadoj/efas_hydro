@@ -21,7 +21,7 @@ setup(
         'unidecode',
     ],
     author='Jesús Casado Rodríguez',
-    author_email='jesus.casado-rodriguez@ec.europa.eu',
+    author_email='chus.casado.88@gmail.com',
     description='Tools to extract data from the Hydrological Data Collection Centre of the European Flood Awareness System',
     keywords='hydrologgic-database efas glofas',
 )
